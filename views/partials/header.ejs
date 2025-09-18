@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supplier & Product App</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header>
+<nav>
+<a href="/products">Sản phẩm</a>
+<a href="/suppliers">Nhà cung cấp</a>
+<% if(currentUser){ %>
+<span>Xin chào, <%= currentUser.username %></span>
+<a href="/logout">Thoát</a>
+<% } else { %>
+<a href="/login">Đăng nhập</a>
+<a href="/register">Đăng ký</a>
+<% } %>
+</nav>
+</header>
+
+<% if (currentUser) { %>
+  <span>Xin chào, <%= currentUser.username %></span>
+  <a href="/logout">Thoát</a>
+<% } else { %>
+  <a href="/login">Đăng nhập</a>
+<% } %>
+
+<% if(success_msg){ %>
+  <p style="color:green"><%= success_msg %></p>
+<% } %>
+
+<% if(error_msg){ %>
+  <p style="color:red"><%= error_msg %></p>
+<% } %>
+
+<% if(error){ %>
+  <p style="color:red"><%= error %></p>
+<% } %>

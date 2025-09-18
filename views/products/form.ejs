@@ -1,0 +1,47 @@
+<%- include('../partials/header') %>
+
+<div class="container mt-4">
+  <h2 class="mb-4 text-primary">Sửa Sản phẩm</h2>
+
+  <% if(success_msg.length > 0){ %>
+    <div class="alert alert-success"><%= success_msg %></div>
+  <% } %>
+  <% if(error_msg.length > 0){ %>
+    <div class="alert alert-danger"><%= error_msg %></div>
+  <% } %>
+
+  <div class="card shadow-sm p-4">
+    <form method="POST" action="/products/edit/<%= product._id %>">
+      <div class="mb-3">
+        <label class="form-label">Tên sản phẩm</label>
+        <input type="text" class="form-control" name="name" value="<%= product.name %>" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Giá</label>
+        <input type="number" class="form-control" name="price" value="<%= product.price %>" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Số lượng</label>
+        <input type="number" class="form-control" name="quantity" value="<%= product.quantity %>">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Nhà cung cấp</label>
+        <select name="supplierId" class="form-select" required>
+          <% suppliers.forEach(s => { %>
+            <option value="<%= s._id %>" <%= String(product.supplierId) === String(s._id) ? 'selected' : '' %>><%= s.name %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div class="d-flex">
+        <button type="submit" class="btn btn-primary me-2">Cập nhật</button>
+        <a href="/products" class="btn btn-secondary">Hủy</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

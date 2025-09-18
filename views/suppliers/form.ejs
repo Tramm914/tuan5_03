@@ -1,0 +1,29 @@
+<%- include('../partials/header') %>
+
+<div class="container mt-4">
+  <h2 class="mb-4"><%= supplier._id ? 'Sửa' : 'Thêm' %> Nhà cung cấp</h2>
+
+  <div class="card p-4 shadow-sm">
+    <form method="POST" action="<%= supplier._id ? '/suppliers/edit/'+supplier._id : '/suppliers/create' %>">
+      <div class="mb-3">
+        <label class="form-label">Tên</label>
+        <input type="text" class="form-control" name="name" value="<%= supplier.name || '' %>" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Địa chỉ</label>
+        <input type="text" class="form-control" name="address" value="<%= supplier.address || '' %>">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">SĐT</label>
+        <input type="text" class="form-control" name="phone" value="<%= supplier.phone || '' %>">
+      </div>
+
+      <button type="submit" class="btn btn-primary"><%= supplier._id ? 'Cập nhật' : 'Thêm' %></button>
+      <a href="/suppliers" class="btn btn-secondary ms-2">Hủy</a>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
