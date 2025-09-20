@@ -1,19 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const productController = require('../controllers/productController');
-
+const {ensureAuth} = require('../middleware/auth');
 // Danh sách
 router.get('/', productController.list);
 
 // Thêm sản phẩm
-router.get('/create', productController.createPage);
-router.post('/create', productController.create);
+router.get('/create',ensureAuth, productController.createForm);
+router.post('/create',ensureAuth, productController.create);
 
 // Sửa sản phẩm
-router.get('/edit/:id', productController.editPage);
-router.post('/edit/:id', productController.update);
+router.get('/:id/edit',ensureAuth, productController.editForm);
+router.post('/:id/edit',ensureAuth, productController.update);
 
 // Xóa sản phẩm
-router.get('/delete/:id', productController.delete);
+router.get('/:id/delete',ensureAuth, productController.delete);
 
 module.exports = router;

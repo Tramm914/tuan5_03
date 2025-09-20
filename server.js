@@ -1,66 +1,47 @@
+require('dotenv').config();
 const express = require('express');
-const path = require('path');
 const mongoose = require('mongoose');
 const session = require('express-session');
-const flash = require('connect-flash');
-const passport = require('passport');
+const MongoStore = require('connect-mongo');
+const path = require('path');
 
-// Routers
-const usersRouter = require('./routes/users');
-const productsRouter = require('./routes/products');
-const suppliersRouter = require('./routes/suppliers');
-const indexRouter = require('./routes/index');
-
-// Khởi tạo app
 const app = express();
 
-// Passport config
-require('./config/passport')(passport);
+// Kết nối MongoDB
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/lab05', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 
-// MongoDB connection
-mongoose.connect('mongodb://localhost:27017/tuan5_03', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-.then(() => console.log("MongoDB connected"))
-.catch(err => console.log(err));
-
-// Body parser
-app.use(express.urlencoded({ extended: false }));
-
-// View engine
-app.set('views', path.join(__dirname, 'views'));
+// Middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
-// Express session
+// Session
 app.use(session({
-    secret: 'secret',
-    resave: true,
-    saveUninitialized: true
+  secret: process.env.SESSION_SECRET || 'secret',
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({ mongoUrl: process.env.MONGO_URI || 'mongodb://localhost:27017/lab05' }),
+  cookie: { maxAge: 1000 * 60 * 60 }
 }));
 
-// Passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Connect flash
-app.use(flash());
-
-// Global variables (để flash và currentUser dùng trong view)
+// Biến toàn cục cho view
 app.use((req, res, next) => {
-    res.locals.currentUser = req.user || null;
-    res.locals.success_msg = req.flash('success_msg');
-    res.locals.error_msg = req.flash('error_msg');
-    res.locals.error = req.flash('error'); // passport error
-    next();
+  res.locals.session = req.session;
+  next();
 });
 
 // Routes
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/products', productsRouter);
-app.use('/suppliers', suppliersRouter); // chỉ mount 1 lần
+app.use('/', require('./routes/index'));
+app.use('/', require('./routes/auth'));
+app.use('/products', require('./routes/products'));
+app.use('/suppliers', require('./routes/suppliers'));
 
-// Start server
+// Khởi động server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});

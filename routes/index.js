@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const Supplier = require('../models/Supplier');
 
-// Trang chủ
-router.get('/', (req, res) => {
-  res.render('index', { title: 'Trang chủ' });
+router.get('/', async (req, res) => {
+  const suppliers = await Supplier.find();
+  res.render('index', { suppliers });
 });
 
 module.exports = router;

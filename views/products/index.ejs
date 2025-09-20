@@ -1,64 +1,39 @@
 <%- include('../partials/header') %>
-
-<div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Danh sách Sản phẩm</h2>
-    <% if(currentUser){ %>
-      <a class="btn btn-success" href="/products/create">+ Thêm sản phẩm</a>
-    <% } %>
-  </div>
-
-  <!-- Form tìm kiếm & lọc -->
-  <form class="row g-3 mb-3" method="GET" action="/products">
-    <div class="col-md-5">
-      <input type="text" class="form-control" name="q" placeholder="Tìm theo tên" value="<%= q || '' %>">
-    </div>
-    <div class="col-md-5">
-      <select name="supplier" class="form-select">
-        <option value="">-- Tất cả nhà cung cấp --</option>
-        <% suppliers.forEach(s => { %>
-          <option value="<%= s._id %>" <%= supplierId==String(s._id)?'selected':'' %>><%= s.name %></option>
-        <% }) %>
-      </select>
-    </div>
-    <div class="col-md-2">
-      <button type="submit" class="btn btn-primary w-100">Lọc</button>
-    </div>
+<div class="container products-page">
+  <h2>Danh sách sản phẩm</h2>
+  <form method="GET" action="/products" class="search-form">
+    <input type="text" name="search" value="<%= search %>" placeholder="Tìm kiếm sản phẩm...">
+    <select name="supplier">
+      <option value="">-- Nhà cung cấp --</option>
+      <% suppliers.forEach(s => { %>
+        <option value="<%= s._id %>" <%= selectedSupplier == s._id ? 'selected' : '' %>><%= s.name %></option>
+      <% }) %>
+    </select>
+    <button type="submit"><b>Lọc</b></button>
   </form>
-
-  <div class="table-responsive">
-    <table class="table table-striped table-bordered align-middle">
-      <thead class="table-dark">
+  <a href="/products/create" class="btn">Thêm sản phẩm</a>
+  <table>
+    <thead>
+      <tr>
+        <th>Tên</th><th>Giá</th><th>Số lượng</th><th>Nhà cung cấp</th><th>Hành động</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% products.forEach(p => { %>
         <tr>
-          <th>#</th>
-          <th>Tên</th>
-          <th>Giá</th>
-          <th>Số lượng</th>
-          <th>Nhà cung cấp</th>
-          <th>Thao tác</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% products.forEach((p, i) => { %>
-        <tr>
-          <td><%= i+1 %></td>
           <td><%= p.name %></td>
           <td><%= p.price %></td>
           <td><%= p.quantity %></td>
-          <td><%= p.supplierId ? p.supplierId.name : 'N/A' %></td>
+          <td><%= p.supplier ? p.supplier.name : '' %></td>
           <td>
-            <% if(currentUser){ %>
-              <a class="btn btn-warning btn-sm me-1" href="/products/edit/<%= p._id %>">Sửa</a>
-              <form method="POST" action="/products/delete/<%= p._id %>" style="display:inline">
-                <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
-              </form>
-            <% } %>
+            <a href="/products/<%= p._id %>/edit">Sửa</a>
+            <form method="POST" action="/products/<%= p._id %>/delete" style="display:inline">
+              <button type="submit" onclick="return confirm('Xóa sản phẩm này?')">Xóa</button>
+            </form>
           </td>
         </tr>
-        <% }) %>
-      </tbody>
-    </table>
-  </div>
+      <% }) %>
+    </tbody>
+  </table>
 </div>
-
 <%- include('../partials/footer') %>

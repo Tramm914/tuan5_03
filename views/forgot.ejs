@@ -1,0 +1,14 @@
+<%- include('partials/header') %>
+<div class="auth-container">
+  <h2>Quên mật khẩu</h2>
+  <% if (typeof message !== 'undefined') { %>
+    <div class="alert alert-info"><%= message %></div>
+  <% } %>
+  <form>
+    <input type="text" placeholder="Nhập email hoặc username">
+    <button type="button" disabled>Gửi yêu cầu</button>
+  </form>
+  <p>Liên hệ quản trị viên để lấy lại mật khẩu.</p>
+  <p><a href="/login">Quay lại đăng nhập</a></p>
+</div>
+<%- include('partials/footer') %>

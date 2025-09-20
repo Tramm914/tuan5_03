@@ -1,51 +1,28 @@
 <%- include('../partials/header') %>
-
-<div class="container mt-5">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="text-primary">Danh sách Nhà cung cấp</h2>
-    <% if(currentUser){ %>
-      <a href="/suppliers/create" class="btn btn-success">+ Thêm nhà cung cấp</a>
-    <% } %>
-  </div>
-
-  <% if(success_msg.length > 0){ %>
-    <div class="alert alert-success"><%= success_msg %></div>
-  <% } %>
-  <% if(error_msg.length > 0){ %>
-    <div class="alert alert-danger"><%= error_msg %></div>
-  <% } %>
-
-  <div class="table-responsive shadow-sm">
-    <table class="table table-striped table-hover align-middle">
-      <thead class="table-dark">
+<div class="container">
+  <h2>Danh sách nhà cung cấp</h2>
+  <a href="/suppliers/create" class="btn">Thêm nhà cung cấp</a>
+  <table>
+    <thead>
+      <tr>
+        <th>Tên</th><th>Địa chỉ</th><th>Số điện thoại</th><th>Hành động</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% suppliers.forEach(s => { %>
         <tr>
-          <th>#</th>
-          <th>Tên</th>
-          <th>Địa chỉ</th>
-          <th>SĐT</th>
-          <th>Thao tác</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% suppliers.forEach((s, i) => { %>
-        <tr>
-          <td><%= i+1 %></td>
           <td><%= s.name %></td>
           <td><%= s.address %></td>
           <td><%= s.phone %></td>
           <td>
-            <% if(currentUser){ %>
-              <a href="/suppliers/edit/<%= s._id %>" class="btn btn-warning btn-sm me-1">Sửa</a>
-              <form method="POST" action="/suppliers/delete/<%= s._id %>" style="display:inline">
-                <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
-              </form>
-            <% } %>
+            <a href="/suppliers/<%= s._id %>/edit">Sửa</a>
+            <form method="POST" action="/suppliers/<%= s._id %>/delete" style="display:inline">
+              <button type="submit" onclick="return confirm('Xóa nhà cung cấp này?')">Xóa</button>
+            </form>
           </td>
         </tr>
-        <% }) %>
-      </tbody>
-    </table>
-  </div>
+      <% }) %>
+    </tbody>
+  </table>
 </div>
-
 <%- include('../partials/footer') %>
